@@ -1,0 +1,324 @@
+[
+  {
+    "crop_name": "玉米", "variety_name": "郑单958", "approval_number": "国审玉20000009",
+    "yield": 650.0, "growth_cycle": 96, "institution": "河南省农业科学院",
+    "locations": ["河南", "山东", "河北中南部", "陕西关中"], "climates": ["黄淮海夏播区"],
+    "pest_resistances": [{"name": "小斑病", "level": "中抗"}, {"name": "茎腐病", "level": "高抗"}, {"name": "玉米螟", "level": "感"}],
+    "abiotic_stress": [{"name": "倒伏", "level": "抗"}, {"name": "干旱", "level": "耐"}]
+  },
+  {
+    "crop_name": "玉米", "variety_name": "先玉335", "approval_number": "国审玉2004017",
+    "yield": 750.0, "growth_cycle": 127, "institution": "铁岭先锋种子研究有限公司",
+    "locations": ["吉林", "辽宁", "山西", "内蒙古赤峰"], "climates": ["东北早熟春玉米区"],
+    "pest_resistances": [{"name": "大斑病", "level": "抗"}, {"name": "丝黑穗病", "level": "中抗"}, {"name": "弯孢菌叶斑病", "level": "感"}],
+    "abiotic_stress": [{"name": "冷害", "level": "抗"}]
+  },
+  {
+    "crop_name": "玉米", "variety_name": "登海605", "approval_number": "国审玉2010010",
+    "yield": 720.0, "growth_cycle": 101, "institution": "山东登海种业股份有限公司",
+    "locations": ["山东", "河南", "河北", "安徽北部"], "climates": ["黄淮海夏播区"],
+    "pest_resistances": [{"name": "小斑病", "level": "抗"}, {"name": "茎腐病", "level": "高抗"}],
+    "abiotic_stress": [{"name": "倒伏", "level": "高抗"}]
+  },
+  {
+    "crop_name": "小麦", "variety_name": "济麦22", "approval_number": "国审麦2006018",
+    "yield": 550.0, "growth_cycle": 239, "institution": "山东省农业科学院作物研究所",
+    "locations": ["山东", "河北中南部", "河南北部", "安徽淮北"], "climates": ["黄淮冬麦区北片"],
+    "pest_resistances": [{"name": "白粉病", "level": "高抗"}, {"name": "条锈病", "level": "中抗"}, {"name": "赤霉病", "level": "感"}],
+    "abiotic_stress": [{"name": "干热风", "level": "抗"}, {"name": "冬春寒害", "level": "抗"}]
+  },
+  {
+    "crop_name": "小麦", "variety_name": "矮抗58", "approval_number": "国审麦2005008",
+    "yield": 520.0, "growth_cycle": 230, "institution": "河南科技学院",
+    "locations": ["河南", "安徽北部", "江苏北部", "陕西关中"], "climates": ["黄淮冬麦区南片"],
+    "pest_resistances": [{"name": "条锈病", "level": "高抗"}, {"name": "白粉病", "level": "中抗"}],
+    "abiotic_stress": [{"name": "倒伏", "level": "高抗"}, {"name": "冻害", "level": "抗"}]
+  },
+  {
+    "crop_name": "水稻", "variety_name": "汕优63", "approval_number": "全国农作物品种审定委员会1986年审定",
+    "yield": 600.0, "growth_cycle": 138, "institution": "福建省三明市农业科学研究所",
+    "locations": ["福建", "湖南", "湖北", "江西", "四川"], "climates": ["长江中下游作一季中稻", "华南作晚稻"],
+    "pest_resistances": [{"name": "稻瘟病", "level": "中抗"}],
+    "abiotic_stress": [{"name": "高温", "level": "耐"}]
+  },
+  {
+    "crop_name": "水稻", "variety_name": "南粳46", "approval_number": "苏审稻200705",
+    "yield": 650.0, "growth_cycle": 165, "institution": "江苏省农业科学院粮食作物研究所",
+    "locations": ["江苏南部", "上海", "浙江北部"], "climates": ["太湖稻区"],
+    "pest_resistances": [{"name": "条纹叶枯病", "level": "抗"}, {"name": "白叶枯病", "level": "中抗"}],
+    "abiotic_stress": [{"name": "倒伏", "level": "抗"}]
+  },
+  {
+    "crop_name": "水稻", "variety_name": "隆两优华占", "approval_number": "国审稻2015025",
+    "yield": 630.0, "growth_cycle": 135, "institution": "袁隆平农业高科技股份有限公司",
+    "locations": ["湖南", "湖北", "江西", "安徽", "浙江"], "climates": ["长江中下游单季迟熟中稻区"],
+    "pest_resistances": [{"name": "稻瘟病", "level": "中抗"}, {"name": "白叶枯病", "level": "抗"}],
+    "abiotic_stress": [{"name": "高温冷害", "level": "抗"}]
+  },
+  {
+    "crop_name": "大豆", "variety_name": "中黄13", "approval_number": "国审豆2001008",
+    "yield": 190.0, "growth_cycle": 105, "institution": "中国农业科学院作物科学研究所",
+    "locations": ["北京", "天津", "河北", "河南", "山东", "安徽", "江苏"], "climates": ["黄淮海夏大豆区"],
+    "pest_resistances": [{"name": "大豆花叶病毒病", "level": "抗"}, {"name": "胞囊线虫病", "level": "感"}],
+    "abiotic_stress": [{"name": "倒伏", "level": "抗"}]
+  },
+  {
+    "crop_name": "大豆", "variety_name": "黑河43", "approval_number": "黑审豆2003008",
+    "yield": 160.0, "growth_cycle": 115, "institution": "黑龙江省农业科学院黑河分院",
+    "locations": ["黑龙江北部", "内蒙古呼伦贝尔"], "climates": ["北方春大豆极早熟区"],
+    "pest_resistances": [{"name": "灰斑病", "level": "抗"}],
+    "abiotic_stress": [{"name": "低温冷害", "level": "高抗"}]
+  },
+  {
+    "crop_name": "棉花", "variety_name": "中棉所41", "approval_number": "国审棉2002002",
+    "yield": 105.0, "growth_cycle": 122, "institution": "中国农业科学院棉花研究所",
+    "locations": ["河北", "山东", "河南", "安徽淮北"], "climates": ["黄河流域棉区"],
+    "pest_resistances": [{"name": "棉铃虫", "level": "高抗"}, {"name": "枯萎病", "level": "抗"}, {"name": "黄萎病", "level": "耐"}],
+    "abiotic_stress": []
+  },
+  {
+    "crop_name": "马铃薯", "variety_name": "克新1号", "approval_number": "黑龙江省农作物品种审定委员会1967年审定",
+    "yield": 2000.0, "growth_cycle": 100, "institution": "黑龙江省农业科学院克山分院",
+    "locations": ["黑龙江", "吉林", "辽宁", "内蒙古", "河北", "山西", "陕西"], "climates": ["北方一季作区"],
+    "pest_resistances": [{"name": "晚疫病", "level": "中抗"}, {"name": "环腐病", "level": "高抗"}],
+    "abiotic_stress": [{"name": "干旱", "level": "抗"}]
+  },
+  {
+    "crop_name": "马铃薯", "variety_name": "荷兰15", "approval_number": "引进品种(原名Favorita)",
+    "yield": 2500.0, "growth_cycle": 70, "institution": "荷兰",
+    "locations": ["山东", "河北", "内蒙古", "广东", "广西"], "climates": ["中原二季作区", "南方冬作区"],
+    "pest_resistances": [{"name": "晚疫病", "level": "感"}, {"name": "马铃薯Y病毒", "level": "抗"}],
+    "abiotic_stress": []
+  },
+  {
+    "crop_name": "花生", "variety_name": "豫花15", "approval_number": "国审油2001018",
+    "yield": 350.0, "growth_cycle": 115, "institution": "河南省农业科学院经济作物研究所",
+    "locations": ["河南", "山东", "河北", "安徽"], "climates": ["黄淮海麦套花生区"],
+    "pest_resistances": [{"name": "网斑病", "level": "抗"}, {"name": "叶斑病", "level": "中抗"}],
+    "abiotic_stress": [{"name": "干旱", "level": "耐"}]
+  },
+  {
+    "crop_name": "油菜", "variety_name": "中双11号", "approval_number": "国审油2008033",
+    "yield": 180.0, "growth_cycle": 215, "institution": "中国农业科学院油料作物研究所",
+    "locations": ["湖北", "湖南", "江西", "安徽", "江苏"], "climates": ["长江中下游冬油菜区"],
+    "pest_resistances": [{"name": "菌核病", "level": "高抗"}, {"name": "病毒病", "level": "抗"}],
+    "abiotic_stress": [{"name": "倒伏", "level": "高抗"}]
+  },
+  {
+    "crop_name": "番茄", "variety_name": "普罗旺斯", "approval_number": "引进杂交一代品种",
+    "yield": 8000.0, "growth_cycle": 120, "institution": "荷兰瑞克斯旺(Rijk Zwaan)",
+    "locations": ["山东", "河北", "辽宁", "宁夏"], "climates": ["北方日光温室", "早春大棚"],
+    "pest_resistances": [{"name": "番茄黄化曲叶病毒(TYLCV)", "level": "高抗"}, {"name": "根结线虫", "level": "抗"}],
+    "abiotic_stress": [{"name": "弱光", "level": "耐"}]
+  },
+  {
+    "crop_name": "番茄", "variety_name": "金棚1号", "approval_number": "陕审菜200101",
+    "yield": 6000.0, "growth_cycle": 110, "institution": "西安金鹏种苗有限公司",
+    "locations": ["陕西", "山东", "河南", "甘肃"], "climates": ["北方早春大棚", "秋延后栽培"],
+    "pest_resistances": [{"name": "叶霉病", "level": "高抗"}, {"name": "烟草花叶病毒(TMV)", "level": "高抗"}],
+    "abiotic_stress": []
+  },
+  {
+    "crop_name": "辣椒", "variety_name": "线椒之王", "approval_number": "商业优良品种",
+    "yield": 3000.0, "growth_cycle": 150, "institution": "国内各大种业",
+    "locations": ["四川", "湖南", "贵州", "新疆"], "climates": ["西南高海拔区", "西北干旱区"],
+    "pest_resistances": [{"name": "病毒病", "level": "抗"}, {"name": "疫病", "level": "中抗"}],
+    "abiotic_stress": [{"name": "高温干旱", "level": "耐"}]
+  },
+  {
+    "crop_name": "大白菜", "variety_name": "新三号", "approval_number": "京审菜2002001",
+    "yield": 7000.0, "growth_cycle": 80, "institution": "北京市农林科学院蔬菜研究中心",
+    "locations": ["北京", "天津", "河北", "山东", "辽宁"], "climates": ["北方秋季露地"],
+    "pest_resistances": [{"name": "病毒病", "level": "高抗"}, {"name": "霜霉病", "level": "抗"}, {"name": "软腐病", "level": "抗"}],
+    "abiotic_stress": []
+  },
+  {
+    "crop_name": "甘薯", "variety_name": "徐薯18", "approval_number": "全国农作物品种审定委员会1982年认定",
+    "yield": 2500.0, "growth_cycle": 140, "institution": "江苏徐州淮阴地区农业科学研究所",
+    "locations": ["江苏", "山东", "河南", "安徽", "河北"], "climates": ["黄淮流域夏薯区"],
+    "pest_resistances": [{"name": "根腐病", "level": "高抗"}, {"name": "黑斑病", "level": "感"}],
+    "abiotic_stress": [{"name": "干旱", "level": "高抗"}, {"name": "瘠薄", "level": "耐"}]
+  },
+  {
+    "crop_name": "大豆", "variety_name": "齐黄34", "approval_number": "鲁农审2012005号",
+    "yield": 280.5, "growth_cycle": 108, "institution": "山东省农业科学院",
+    "locations": ["山东", "河南", "安徽", "江苏", "陕西"], "climates": ["黄淮海夏大豆区", "西北旱作区"],
+    "pest_resistances": [{"name": "大豆花叶病毒病", "level": "高抗"}, {"name": "胞囊线虫病", "level": "抗"}],
+    "abiotic_stress": [{"name": "干旱", "level": "高抗"}, {"name": "盐碱", "level": "耐"}, {"name": "涝害", "level": "耐"}]
+  },
+  {
+    "crop_name": "茶树", "variety_name": "龙井43", "approval_number": "全国农作物品种审定委员会1987年认定",
+    "yield": 150.0, "growth_cycle": 280, "institution": "中国农业科学院茶叶研究所",
+    "locations": ["浙江", "江苏", "安徽", "江西"], "climates": ["江南茶区"],
+    "pest_resistances": [{"name": "茶炭疽病", "level": "抗"}, {"name": "假眼小绿叶蝉", "level": "感"}],
+    "abiotic_stress": [{"name": "春季晚霜冻", "level": "易受害"}]
+  },
+  {
+    "crop_name": "茶树", "variety_name": "福鼎大白茶", "approval_number": "全国农作物品种审定委员会1985年认定",
+    "yield": 180.0, "growth_cycle": 300, "institution": "福建省福鼎市",
+    "locations": ["福建", "浙江", "湖南", "四川"], "climates": ["华南茶区", "江南茶区"],
+    "pest_resistances": [{"name": "茶饼病", "level": "感"}],
+    "abiotic_stress": [{"name": "干旱", "level": "抗"}, {"name": "低温冷害", "level": "抗"}]
+  },
+  {
+    "crop_name": "西瓜", "variety_name": "早佳8424", "approval_number": "沪农委1988年认定",
+    "yield": 3000.0, "growth_cycle": 90, "institution": "新疆农科院哈密瓜研究中心",
+    "locations": ["上海", "浙江", "江苏", "安徽", "新疆"], "climates": ["华东早春大棚", "夏季露地"],
+    "pest_resistances": [{"name": "枯萎病", "level": "感"}, {"name": "炭疽病", "level": "中抗"}],
+    "abiotic_stress": [{"name": "弱光", "level": "耐"}, {"name": "低温", "level": "耐"}]
+  },
+  {
+    "crop_name": "西瓜", "variety_name": "甜王", "approval_number": "商业优良品种",
+    "yield": 4000.0, "growth_cycle": 100, "institution": "各大种业公司",
+    "locations": ["山东", "吉林", "辽宁", "河南"], "climates": ["北方露地", "早春保护地"],
+    "pest_resistances": [{"name": "枯萎病", "level": "抗"}, {"name": "病毒病", "level": "中抗"}],
+    "abiotic_stress": [{"name": "高温", "level": "耐"}, {"name": "裂瓜", "level": "抗"}]
+  },
+  {
+    "crop_name": "葡萄", "variety_name": "阳光玫瑰", "approval_number": "日本引进品种(Shine Muscat)",
+    "yield": 2500.0, "growth_cycle": 140, "institution": "日本果树试验场",
+    "locations": ["云南", "浙江", "江苏", "湖南", "四川"], "climates": ["南方避雨栽培区", "干热河谷区"],
+    "pest_resistances": [{"name": "霜霉病", "level": "抗"}, {"name": "白腐病", "level": "中抗"}, {"name": "黑痘病", "level": "高抗"}],
+    "abiotic_stress": [{"name": "日灼病", "level": "易感"}, {"name": "病毒病", "level": "易感"}]
+  },
+  {
+    "crop_name": "葡萄", "variety_name": "克伦生", "approval_number": "美国引进无核品种",
+    "yield": 2000.0, "growth_cycle": 160, "institution": "美国加州大学",
+    "locations": ["新疆", "甘肃", "宁夏"], "climates": ["西北干旱半干旱区"],
+    "pest_resistances": [{"name": "白粉病", "level": "感"}],
+    "abiotic_stress": [{"name": "干旱", "level": "高抗"}, {"name": "日灼", "level": "耐"}]
+  },
+  {
+    "crop_name": "苹果", "variety_name": "烟富3号", "approval_number": "鲁农审2000031号",
+    "yield": 4500.0, "growth_cycle": 175, "institution": "山东省烟台市果树工作站",
+    "locations": ["山东", "陕西", "山西", "甘肃", "辽宁"], "climates": ["渤海湾苹果产区", "黄土高原苹果产区"],
+    "pest_resistances": [{"name": "轮纹病", "level": "感"}, {"name": "早期落叶病", "level": "中抗"}],
+    "abiotic_stress": [{"name": "苦痘病", "level": "易感"}]
+  },
+  {
+    "crop_name": "苹果", "variety_name": "瑞雪", "approval_number": "国审果2015005",
+    "yield": 3500.0, "growth_cycle": 170, "institution": "西北农林科技大学",
+    "locations": ["陕西", "甘肃", "山西"], "climates": ["黄土高原高海拔苹果产区"],
+    "pest_resistances": [{"name": "白粉病", "level": "高抗"}, {"name": "褐斑病", "level": "高抗"}],
+    "abiotic_stress": [{"name": "干旱", "level": "抗"}, {"name": "日灼", "level": "抗"}]
+  },
+  {
+    "crop_name": "谷子", "variety_name": "张杂谷10号", "approval_number": "国审谷2012006",
+    "yield": 500.0, "growth_cycle": 115, "institution": "张家口市农业科学院",
+    "locations": ["河北", "山西", "内蒙古", "辽宁", "新疆"], "climates": ["西北旱作区", "东北早熟区"],
+    "pest_resistances": [{"name": "谷子白发病", "level": "高抗"}, {"name": "黑穗病", "level": "抗"}],
+    "abiotic_stress": [{"name": "干旱", "level": "极强"}, {"name": "瘠薄", "level": "高抗"}]
+  },
+  {
+    "crop_name": "高粱", "variety_name": "晋杂22号", "approval_number": "晋审粱2008001",
+    "yield": 750.0, "growth_cycle": 125, "institution": "山西省农业科学院高粱研究所",
+    "locations": ["山西", "内蒙古", "吉林", "辽宁"], "climates": ["北方春播早熟区"],
+    "pest_resistances": [{"name": "丝黑穗病", "level": "高抗"}, {"name": "蚜虫", "level": "中抗"}],
+    "abiotic_stress": [{"name": "盐碱", "level": "耐"}, {"name": "干旱", "level": "抗"}]
+  },
+  {
+    "crop_name": "黄瓜", "variety_name": "津优35号", "approval_number": "津农种审瓜2006001",
+    "yield": 6500.0, "growth_cycle": 100, "institution": "天津科润黄瓜研究所",
+    "locations": ["天津", "山东", "河北", "辽宁", "河南"], "climates": ["日光温室越冬", "早春茬"],
+    "pest_resistances": [{"name": "霜霉病", "level": "高抗"}, {"name": "白粉病", "level": "抗"}, {"name": "枯萎病", "level": "高抗"}],
+    "abiotic_stress": [{"name": "低温弱光", "level": "极强"}]
+  },
+  {
+    "crop_name": "大蒜", "variety_name": "金乡大蒜", "approval_number": "地理标志保护品种",
+    "yield": 1500.0, "growth_cycle": 240, "institution": "山东省金乡县",
+    "locations": ["山东", "江苏", "河南"], "climates": ["黄淮海秋播区"],
+    "pest_resistances": [{"name": "紫斑病", "level": "中抗"}, {"name": "蒜蛆", "level": "感"}],
+    "abiotic_stress": [{"name": "越冬寒害", "level": "抗"}]
+  },
+  {
+    "crop_name": "油菜", "variety_name": "华油杂62", "approval_number": "国审油2011001",
+    "yield": 200.0, "growth_cycle": 210, "institution": "华中农业大学",
+    "locations": ["湖北", "湖南", "江西", "安徽", "浙江"], "climates": ["长江中下游冬油菜区"],
+    "pest_resistances": [{"name": "菌核病", "level": "中抗"}, {"name": "病毒病", "level": "抗"}],
+    "abiotic_stress": [{"name": "倒伏", "level": "抗"}, {"name": "裂荚", "level": "抗"}]
+  },
+  {
+    "crop_name": "草莓", "variety_name": "红颜", "approval_number": "日本静冈县引进",
+    "yield": 2500.0, "growth_cycle": 120, "institution": "日本静冈县农业试验场",
+    "locations": ["辽宁", "山东", "浙江", "江苏", "四川"], "climates": ["北方日光温室", "南方塑料大棚"],
+    "pest_resistances": [{"name": "白粉病", "level": "极易感"}, {"name": "炭疽病", "level": "感"}, {"name": "红蜘蛛", "level": "易感"}],
+    "abiotic_stress": [{"name": "低温", "level": "不耐"}, {"name": "重茬", "level": "极不耐"}]
+  },
+  {
+    "crop_name": "柑橘", "variety_name": "春见(耙耙柑)", "approval_number": "日本引进杂交柑橘",
+    "yield": 3000.0, "growth_cycle": 270, "institution": "日本静冈县果树试验场",
+    "locations": ["四川", "重庆", "福建", "江西"], "climates": ["长江中上游柑橘带", "中亚热带气候区"],
+    "pest_resistances": [{"name": "溃疡病", "level": "中抗"}, {"name": "红蜘蛛", "level": "感"}],
+    "abiotic_stress": [{"name": "冬季冻害", "level": "易受害"}, {"name": "裂果", "level": "抗"}]
+  },
+  {
+    "crop_name": "甘蔗", "variety_name": "桂糖42号", "approval_number": "桂审蔗2014002号",
+    "yield": 8500.0, "growth_cycle": 300, "institution": "广西农业科学院甘蔗研究所",
+    "locations": ["广西", "广东", "云南", "海南"], "climates": ["华南南亚热带季风区"],
+    "pest_resistances": [{"name": "黑穗病", "level": "高抗"}, {"name": "甘蔗螟虫", "level": "中感"}],
+    "abiotic_stress": [{"name": "干旱", "level": "强抗"}, {"name": "倒伏", "level": "强抗"}, {"name": "宿根性", "level": "极强"}]
+  },
+  {
+    "crop_name": "荔枝", "variety_name": "妃子笑", "approval_number": "广东传统名优品种",
+    "yield": 1500.0, "growth_cycle": 110, "institution": "广东省",
+    "locations": ["广东", "广西", "海南", "福建"], "climates": ["热带及南亚热带季风区"],
+    "pest_resistances": [{"name": "荔枝蒂蛀虫", "level": "感"}, {"name": "霜疫霉病", "level": "感"}],
+    "abiotic_stress": [{"name": "花期阴雨", "level": "极不耐"}, {"name": "裂果", "level": "耐"}]
+  },
+  {
+    "crop_name": "向日葵", "variety_name": "同庆5号", "approval_number": "内审葵2016005",
+    "yield": 280.0, "growth_cycle": 105, "institution": "内蒙古同庆种业",
+    "locations": ["内蒙古", "新疆", "吉林", "甘肃"], "climates": ["北方干旱半干旱区", "西北内陆区"],
+    "pest_resistances": [{"name": "黄萎病", "level": "中抗"}, {"name": "列当(寄生草)", "level": "免疫"}],
+    "abiotic_stress": [{"name": "盐碱", "level": "高抗"}, {"name": "干旱", "level": "极强"}]
+  },
+  {
+    "crop_name": "芝麻", "variety_name": "中芝11号", "approval_number": "国审芝2005001",
+    "yield": 120.0, "growth_cycle": 90, "institution": "中国农业科学院油料作物研究所",
+    "locations": ["河南", "湖北", "安徽", "江西"], "climates": ["江淮及黄淮夏芝麻区"],
+    "pest_resistances": [{"name": "茎点枯病", "level": "抗"}, {"name": "枯萎病", "level": "抗"}],
+    "abiotic_stress": [{"name": "渍涝", "level": "极不耐(见水就死)"}, {"name": "干旱", "level": "耐"}]
+  },
+  {
+    "crop_name": "茄子", "variety_name": "杭茄1号", "approval_number": "浙审菜2002005",
+    "yield": 4500.0, "growth_cycle": 115, "institution": "杭州市农业科学研究院",
+    "locations": ["浙江", "江苏", "上海", "安徽"], "climates": ["长江流域早春大棚", "秋延后栽培"],
+    "pest_resistances": [{"name": "黄萎病", "level": "中抗"}, {"name": "青枯病", "level": "抗"}],
+    "abiotic_stress": [{"name": "低温弱光", "level": "强耐"}]
+  },
+  {
+    "crop_name": "甜瓜", "variety_name": "羊角蜜", "approval_number": "华北传统特色品种",
+    "yield": 3500.0, "growth_cycle": 85, "institution": "河北省青县(原产地)",
+    "locations": ["河北", "山东", "河南", "天津"], "climates": ["北方日光温室", "春大棚"],
+    "pest_resistances": [{"name": "白粉病", "level": "感"}, {"name": "蔓枯病", "level": "中抗"}],
+    "abiotic_stress": [{"name": "高温", "level": "耐"}, {"name": "徒长", "level": "易发生"}]
+  },
+  {
+    "crop_name": "洋葱", "variety_name": "泉州黄", "approval_number": "日本引进长日照品种",
+    "yield": 6000.0, "growth_cycle": 250, "institution": "日本",
+    "locations": ["山东", "甘肃", "内蒙古", "新疆"], "climates": ["北方长日照区"],
+    "pest_resistances": [{"name": "紫斑病", "level": "抗"}, {"name": "霜霉病", "level": "感"}],
+    "abiotic_stress": [{"name": "抽薹", "level": "极抗(不易先期抽薹)"}, {"name": "耐储藏", "level": "极强"}]
+  },
+  {
+    "crop_name": "萝卜", "variety_name": "卫青萝卜", "approval_number": "天津地方名优品种(沙窝萝卜)",
+    "yield": 4000.0, "growth_cycle": 80, "institution": "天津市西青区",
+    "locations": ["天津", "河北", "山东"], "climates": ["华北秋季露地"],
+    "pest_resistances": [{"name": "病毒病", "level": "抗"}, {"name": "软腐病", "level": "高抗"}],
+    "abiotic_stress": [{"name": "糠心", "level": "抗(极耐储藏)"}]
+  },
+  {
+    "crop_name": "樱桃", "variety_name": "美早", "approval_number": "美国引进(Tieton)",
+    "yield": 1200.0, "growth_cycle": 65, "institution": "美国华盛顿州立大学",
+    "locations": ["山东大连", "山东烟台", "陕西", "甘肃"], "climates": ["暖温带半湿润果区", "北方设施大棚"],
+    "pest_resistances": [{"name": "根癌病", "level": "感"}, {"name": "褐斑病", "level": "中抗"}],
+    "abiotic_stress": [{"name": "裂果", "level": "极易发生(雨后)"}, {"name": "晚霜冻害", "level": "易受害"}]
+  },
+  {
+    "crop_name": "核桃", "variety_name": "辽核1号", "approval_number": "辽审果1989001",
+    "yield": 350.0, "growth_cycle": 150, "institution": "辽宁省经济林研究所",
+    "locations": ["辽宁", "山西", "陕西", "新疆", "河北"], "climates": ["北方温带干旱半干旱区"],
+    "pest_resistances": [{"name": "核桃黑斑病", "level": "抗"}, {"name": "炭疽病", "level": "高抗"}],
+    "abiotic_stress": [{"name": "越冬抽条", "level": "高抗(极耐寒)"}, {"name": "干旱", "level": "强耐"}]
+  }
+]
