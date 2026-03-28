@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理系统 - 农产品良种智能客服</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        :root {
+            --sidebar-width: 240px;
+            --primary-color: #2e7d32;
+            --bg-color: #f4f7f6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { display: flex; background-color: var(--bg-color); height: 100vh; }
+
+        /* --- 侧边栏 --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #1b5e20;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+        .sidebar-header { text-align: center; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-menu { flex: 1; margin-top: 20px; }
+        .menu-item {
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .menu-item:hover, .menu-item.active { background-color: var(--primary-color); }
+        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .logout-btn { color: #ffab91; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+
+        /* --- 主内容区 --- */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .content-body { flex: 1; padding: 30px; overflow-y: auto; }
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        /* --- 数据大屏卡片 --- */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .chart-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: 400px; }
+
+        /* --- 图谱录入表单 --- */
+        .form-card { background: white; padding: 30px; border-radius: 12px; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
+        .submit-btn { background: var(--primary-color); color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-leaf"></i> 农博后台</h3>
+        </div>
+        <div class="sidebar-menu">
+            <div class="menu-item active" onclick="showPage('dashboard')">
+                <i class="fas fa-chart-line"></i> 数据大屏
+            </div>
+            <div class="menu-item" onclick="showPage('kg-manage')">
+                <i class="fas fa-project-diagram"></i> 图谱管理
+            </div>
+            <div class="menu-item" onclick="showPage('logs')">
+                <i class="fas fa-history"></i> 问答日志
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> 退出系统</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h2 id="pageTitle">数据大屏</h2>
+            <div class="admin-info">管理员: <strong id="adminName">Admin</strong></div>
+        </header>
+
+        <div class="content-body">
+            <section id="dashboard" class="page-section active">
+                <div class="stats-grid">
+                    <div class="chart-card" id="cropChart"></div>
+                    <div class="chart-card" id="locationChart"></div>
+                </div>
+            </section>
+
+            <section id="kg-manage" class="page-section">
+                <div class="form-card">
+                    <h3 style="margin-bottom: 20px;">录入农产品良种数据</h3>
+                    <div class="form-group">
+                        <label>作物类别 (如: 玉米)</label>
+                        <input type="text" id="kg-crop" placeholder="请输入作物名称">
+                    </div>
+                    <div class="form-group">
+                        <label>品种名称</label>
+                        <input type="text" id="kg-variety" placeholder="请输入品种名称">
+                    </div>
+                    <div class="form-group">
+                        <label>预估亩产 (公斤)</label>
+                        <input type="number" id="kg-yield">
+                    </div>
+                    <div class="form-group">
+                        <label>审定编号</label>
+                        <input type="text" id="kg-approval">
+                    </div>
+                    <div class="form-group">
+                        <label>适宜地区 (用中文逗号分隔)</label>
+                        <input type="text" id="kg-locations" placeholder="河南，山东，河北">
+                    </div>
+                    <div class="form-group">
+                        <label>抗性特征 (用中文逗号分隔)</label>
+                        <input type="text" id="kg-resistances" placeholder="抗倒伏，耐干旱">
+                    </div>
+                    <button class="submit-btn" onclick="submitKG()">提交至知识图谱</button>
+                </div>
+            </section>
+
+            <section id="logs" class="page-section">
+                <div class="form-card" style="max-width: 100%;">
+                    <h3>问答日志记录</h3>
+                    <p style="margin-top: 20px; color: #888;">日志数据已实时存储在 MySQL 数据库的 `chat_logs` 表中。</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // 页面切换逻辑
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            document.getElementById('pageTitle').innerText = event.currentTarget.innerText.trim();
+
+            if(pageId === 'dashboard') loadStats();
+        }
+
+        // --- 模块 A: 加载 ECharts 数据 ---
+        function loadStats() {
+            fetch('/api/admin/stats')
+                .then(res => res.json())
+                .then(data => {
+                    // 作物热度图
+                    const cropChart = echarts.init(document.getElementById('cropChart'));
+                    cropChart.setOption({
+                        title: { text: '热门咨询作物排行' },
+                        tooltip: {},
+                        xAxis: { data: data.crops.map(i => i.name) },
+                        yAxis: {},
+                        series: [{ type: 'bar', data: data.crops.map(i => i.value), itemStyle: {color: '#4caf50'} }]
+                    });
+
+                    // 地区分布图
+                    const locChart = echarts.init(document.getElementById('locationChart'));
+                    locChart.setOption({
+                        title: { text: '咨询用户地区分布', left: 'center' },
+                        tooltip: { trigger: 'item' },
+                        series: [{
+                            type: 'pie',
+                            radius: '50%',
+                            data: data.locations,
+                            emphasis: { itemStyle: { shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)' } }
+                        }]
+                    });
+                });
+        }
+
+        // --- 模块 B: 提交图谱数据 ---
+        function submitKG() {
+            const payload = {
+                crop: document.getElementById('kg-crop').value,
+                variety: document.getElementById('kg-variety').value,
+                yield: document.getElementById('kg-yield').value,
+                approval: document.getElementById('kg-approval').value,
+                locations: document.getElementById('kg-locations').value.split(/[，,]/),
+                resistances: document.getElementById('kg-resistances').value.split(/[，,]/)
+            };
+
+            fetch('/api/admin/kg/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.msg);
+                if(data.code === 200) location.reload();
+            });
+        }
+
+        // 初始加载
+        window.onload = loadStats;
+    </script>
+</body>
+</html>

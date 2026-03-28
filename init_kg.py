@@ -56,3 +56,5 @@ if __name__ == "__main__":
     importer = RealGraphImporter("bolt://localhost:7687", "neo4j", "12345678")
     importer.import_data('nongchanpin.json')
     importer.driver.close()
+
+# neo4j.bat console

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 农产品良种智能客服系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #a5d6a7;
+            --earth-yellow: #fff8e1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            background-image: url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 400px;
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--light-green);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header i {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .header h2 {
+            color: var(--primary-green);
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-green);
+        }
+
+        .btn-box {
+            margin-top: 30px;
+        }
+
+        .main-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+        }
+
+        .main-btn:hover {
+            background-color: #1b5e20;
+            transform: translateY(-2px);
+        }
+
+        .main-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .toggle-box {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .toggle-box span {
+            color: var(--primary-green);
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #errorMsg {
+            color: #d32f2f;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="header">
+        <i class="fas fa-seedling"></i>
+        <h2 id="titleText">良种智能客服登录</h2>
+    </div>
+
+    <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="username" placeholder="请输入用户名" required>
+    </div>
+
+    <div class="input-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" placeholder="请输入密码" required>
+    </div>
+
+    <p id="errorMsg"></p>
+
+    <div class="btn-box">
+        <button class="main-btn" id="actionBtn">立 即 登 录</button>
+    </div>
+
+    <div class="toggle-box" id="toggleArea">
+        还没有账号？ <span id="toggleLink">点击注册</span>
+    </div>
+</div>
+
+<script>
+    const titleText = document.getElementById('titleText');
+    const actionBtn = document.getElementById('actionBtn');
+    const toggleLink = document.getElementById('toggleLink');
+    const errorMsg = document.getElementById('errorMsg');
+
+    let isLoginMode = true;
+
+    // 切换登录/注册模式
+    toggleLink.addEventListener('click', () => {
+        isLoginMode = !isLoginMode;
+        if (isLoginMode) {
+            titleText.innerText = '良种智能客服登录';
+            actionBtn.innerText = '立 即 登 录';
+            toggleLink.innerText = '点击注册';
+            document.getElementById('toggleArea').firstChild.textContent = '还没有账号？ ';
+        } else {
+            titleText.innerText = '新用户注册';
+            actionBtn.innerText = '立 即 注 册';
+            toggleLink.innerText = '返回登录';
+            document.getElementById('toggleArea').firstChild.textContent = '已有账号？ ';
+        }
+        errorMsg.innerText = '';
+    });
+
+    // 提交逻辑
+    actionBtn.addEventListener('click', () => {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        if (!username || !password) {
+            errorMsg.innerText = '请填写完整信息';
+            return;
+        }
+
+        actionBtn.disabled = true;
+        actionBtn.innerText = isLoginMode ? '正在登录...' : '正在注册...';
+        errorMsg.innerText = '';
+
+        const url = isLoginMode ? '/api/login' : '/api/register';
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+            // 【关键修复】：强制包含凭据（Cookies）
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.code === 200) {
+                if (isLoginMode) {
+                    errorMsg.style.color = 'var(--primary-green)';
+                    errorMsg.innerText = '登录成功，正在跳转...';
+                    // 稍微延迟一下确保 Cookie 写入完毕
+                    setTimeout(() => {
+                        window.location.href = data.role === 'admin' ? '/admin' : '/';
+                    }, 500);
+                } else {
+                    alert('注册成功，请登录！');
+                    toggleLink.click();
+                    actionBtn.disabled = false;
+                }
+            } else {
+                errorMsg.style.color = '#d32f2f';
+                errorMsg.innerText = data.msg;
+                actionBtn.disabled = false;
+                actionBtn.innerText = isLoginMode ? '立 即 登 录' : '立 即 注 册';
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            errorMsg.style.color = '#d32f2f';
+            errorMsg.innerText = '网络异常，请确认后端服务运行中';
+            actionBtn.disabled = false;
+            actionBtn.innerText = isLoginMode ? '立 即 登 录' : '立 即 注 册';
+        });
+    });
+</script>
+
+</body>
+</html>

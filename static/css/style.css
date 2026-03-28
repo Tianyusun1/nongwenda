@@ -1,0 +1,289 @@
+/* --- 基础复位与全局样式 --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft YaHei", sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- 主容器 (模拟手机/平板视窗，居中显示) --- */
+.main-container {
+    width: 450px;
+    height: 90vh;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 2px solid #a5d6a7;
+}
+
+/* --- 顶部标题栏 --- */
+.chat-header {
+    background-color: #2e7d32;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 2.5rem;
+    color: #fff9c4;
+}
+
+.logo-area h1 {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.logo-area p {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* 【新增】LBS 定位标签样式 */
+.location-tag {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.location-tag:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* --- 聊天窗口 --- */
+.chat-window {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #fff8e1;
+}
+
+.chat-window::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-window::-webkit-scrollbar-thumb {
+    background-color: rgba(46, 125, 50, 0.2);
+    border-radius: 3px;
+}
+
+/* --- 消息气泡通用样式 --- */
+.message {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+.message .content {
+    max-width: 75%; /* 稍微加宽一点，容纳卡片 */
+    padding: 10px 15px;
+    border-radius: 10px;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.message .time {
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 5px;
+    display: block;
+}
+
+/* --- 机器人消息样式 (左侧) --- */
+.bot-message .avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #a5d6a7;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.2rem;
+    margin-right: 10px;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    flex-shrink: 0; /* 防止头像被挤压 */
+}
+
+.bot-message .content {
+    background-color: #ffffff;
+    color: #333;
+    border-top-left-radius: 0;
+    border: 1px solid #e0e0e0;
+}
+
+/* --- 用户消息样式 (右侧) --- */
+.user-message {
+    flex-direction: row-reverse;
+}
+
+.user-message .content {
+    background-color: #4caf50;
+    color: white;
+    border-top-right-radius: 0;
+}
+
+.user-message .time {
+    color: rgba(255,255,255,0.7);
+    text-align: right;
+}
+
+/* --- 【新增】富文本知识图谱卡片样式 --- */
+.kg-cards-container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.kg-card {
+    background-color: #f1f8e9; /* 淡绿色背景 */
+    border: 1px solid #c5e1a5;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.kg-card-header {
+    background-color: #c5e1a5;
+    color: #2e7d32;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #aed581;
+}
+
+.kg-card-body {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.kg-card-body p {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.kg-card-body p:last-child {
+    margin-bottom: 0;
+}
+
+.kg-card-body span {
+    font-weight: bold;
+    color: #33691e;
+    min-width: 65px; /* 对齐标签 */
+    display: inline-block;
+}
+
+.kg-card-body i {
+    width: 16px;
+    text-align: center;
+    margin-right: 4px;
+    color: #7cb342;
+}
+
+/* --- 底部输入区域 --- */
+.input-area {
+    background-color: #ffffff;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* 【新增】语音按钮样式 */
+.voice-btn {
+    background-color: #fff;
+    border: 2px solid #2e7d32;
+    color: #2e7d32;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+
+.voice-btn:hover {
+    background-color: #e8f5e9;
+}
+
+#userInput {
+    flex: 1;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 10px 15px;
+    resize: none;
+    outline: none;
+    font-size: 0.95rem;
+    transition: border-color 0.3s;
+}
+
+#userInput:focus {
+    border-color: #2e7d32;
+}
+
+.send-btn {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.send-btn:hover {
+    background-color: #1b5e20;
+}
+
+/* 旋转加载动画 */
+.fa-spin {
+    animation: fa-spin 2s infinite linear;
+}
+@keyframes fa-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(359deg); }
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农产品良种智能客服 - 丰收助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* 这里补充一点针对顶部右侧状态栏的微调样式 */
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .auth-bar {
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 4px 12px;
+            border-radius: 15px;
+            color: #fff;
+        }
+        .auth-bar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 5px;
+            transition: opacity 0.3s;
+        }
+        .auth-bar a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+        .admin-link {
+            color: #fff9c4 !important; /* 金黄色突出显示后台入口 */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <header class="chat-header">
+        <div class="logo-area">
+            <i class="fas fa-seedling logo-icon"></i>
+            <div>
+                <h1>良种智能客服</h1>
+                <p>—— 您的专属丰收助手 ——</p>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="location-tag" id="locationTag" title="点击重新定位">
+                <i class="fas fa-map-marker-alt"></i> <span id="locationText">正在获取定位...</span>
+            </div>
+
+            <div class="auth-bar">
+                {% if session.get('username') %}
+                    <span><i class="fas fa-user-circle"></i> {{ session.username }}</span>
+                    <span style="margin: 0 8px; opacity: 0.5;">|</span>
+                    {% if session.get('role') == 'admin' %}
+                        <a href="/admin" class="admin-link"><i class="fas fa-user-shield"></i> 管理后台</a>
+                        <span style="margin: 0 8px; opacity: 0.5;">|</span>
+                    {% endif %}
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> 退出</a>
+                {% else %}
+                    <a href="/login"><i class="fas fa-sign-in-alt"></i> 登录 / 注册</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="chat-window" id="chatWindow">
+        <div class="message bot-message">
+            <div class="avatar">
+                <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="content">
+                <p>您好！我是您的良种智能客服。我已连接到农业知识图谱并准备就绪。 🌱</p>
+                <p style="margin-top: 8px; font-size: 0.9rem; opacity: 0.9;">
+                    您可以咨询：<br>
+                    • “推荐几个在山东高产的小麦品种”<br>
+                    • “玉米出现褐斑病怎么防治？”<br>
+                    • “我想了解一下郑单958的亩产情况”
+                </p>
+                <span class="time">刚刚</span>
+            </div>
+        </div>
+    </div>
+
+    <footer class="input-area">
+        <button id="voiceBtn" class="voice-btn" title="点击开始语音输入">
+            <i class="fas fa-microphone"></i>
+        </button>
+
+        <textarea id="userInput" placeholder="输入问题或点击左侧麦克风说话..." rows="1"></textarea>
+
+        <button id="sendBtn" class="send-btn">
+            <i class="fas fa-paper-plane"></i> 发送
+        </button>
+    </footer>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
