@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- 1. 基础组件获取 ---
     const chatWindow = document.getElementById('chatWindow');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
@@ -6,63 +7,68 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationText = document.getElementById('locationText');
     const locationTag = document.getElementById('locationTag');
 
+    // --- 2. 历史记录侧边栏组件 ---
+    const historySidebar = document.getElementById('historySidebar');
+    const historyList = document.getElementById('historyList');
+    const openHistoryBtn = document.getElementById('openHistoryBtn');
+    const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+
     // 全局状态
     let currentUserLocation = null;
     let isRecording = false;
 
     // ==========================================
-    // 1. 【新增】用户登录状态检查与 UI 更新
+    // 1. 初始化：自动欢迎语与定位
     // ==========================================
-    function updateAuthUI() {
-        // 我们通过请求 health 接口或其他方式，在后端 session 中获取状态
-        // 也可以直接在 index.html 渲染时注入变量，这里采用更灵活的 JS 检查
-        fetch('/api/health') // 利用健康检查接口顺便探测登录态（或者新增一个专门的 /api/user/info）
-            .then(res => res.json())
-            .then(data => {
-                // 假设我们在后端返回中加入了简单的 session 识别或在 index.html 预留容器
-                const authContainer = document.getElementById('authContainer');
-                if (!authContainer) return;
-
-                // 注意：这里为了配合 app.py 的 session，我们通常在后端模板里直接判断更准
-                // 但为了系统完整性，我们在前端也写好动态逻辑
-            });
-    }
+    const initApp = () => {
+        const welcomeMsg = "您好！我是您的农产品良种咨询专家。您可以问我类似“河南适合种什么玉米？”或“先玉335的特征是什么？”的问题。";
+        appendMessage('bot', welcomeMsg);
+        initLocation();
+    };
 
     // ==========================================
     // 2. 特色功能：LBS 自动定位
     // ==========================================
     function initLocation() {
-        if (navigator.geolocation) {
-            locationText.innerText = "定位中...";
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`)
-                        .then(res => res.json())
-                        .then(data => {
-                            const address = data.address;
-                            currentUserLocation = address.state || address.city || address.province || "未知地区";
-                            locationText.innerText = currentUserLocation;
-                            locationTag.style.color = "#fff9c4";
-                        })
-                        .catch(() => {
-                            locationText.innerText = "定位解析失败";
-                            currentUserLocation = null;
-                        });
-                },
-                (error) => {
-                    locationText.innerText = "未开启定位";
-                },
-                { timeout: 10000 }
-            );
-        } else {
-            locationText.innerText = "浏览器不支持定位";
+        if (!navigator.geolocation) {
+            locationText.innerText = "不支持定位";
+            return;
         }
-    }
 
-    locationTag.addEventListener('click', initLocation);
-    initLocation();
+        locationText.innerText = "正在定位...";
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`, {
+                    headers: { 'Accept-Language': 'zh-CN' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const address = data.address;
+                    currentUserLocation = address.province || address.city || address.state || "未知地区";
+                    currentUserLocation = currentUserLocation.replace(/[省市]/g, '');
+                    locationText.innerText = currentUserLocation;
+                    locationTag.classList.add('active');
+                })
+                .catch(() => {
+                    locationText.innerText = "定位解析失败";
+                });
+            },
+            (error) => {
+                locationText.innerText = "请手动输入地区";
+                locationTag.onclick = () => {
+                    const manualLoc = prompt("请输入您所在的省份或城市（如：河南）：");
+                    if (manualLoc) {
+                        currentUserLocation = manualLoc.replace(/[省市]/g, '');
+                        locationText.innerText = currentUserLocation;
+                    }
+                };
+            },
+            { timeout: 8000 }
+        );
+    }
 
     // ==========================================
     // 3. 特色功能：ASR 语音识别 (Web Speech API)
@@ -73,114 +79,101 @@ document.addEventListener('DOMContentLoaded', () => {
     if (SpeechRecognition) {
         recognition = new SpeechRecognition();
         recognition.lang = 'zh-CN';
-        recognition.continuous = false;
         recognition.interimResults = false;
 
-        recognition.onstart = function() {
+        recognition.onstart = () => {
             isRecording = true;
-            voiceBtn.style.backgroundColor = "#d32f2f";
-            voiceBtn.innerHTML = '<i class="fas fa-stop" style="color:white"></i>';
+            voiceBtn.classList.add('recording');
+            voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
             userInput.placeholder = "正在聆听，请说话...";
         };
 
-        recognition.onresult = function(event) {
+        recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
             userInput.value = transcript;
             sendMessage(true);
         };
 
-        recognition.onerror = function() { resetVoiceBtn(); };
-        recognition.onend = function() { resetVoiceBtn(); };
+        recognition.onerror = () => resetVoiceBtn();
+        recognition.onend = () => resetVoiceBtn();
     } else {
         voiceBtn.style.display = 'none';
     }
 
     function resetVoiceBtn() {
         isRecording = false;
-        voiceBtn.style.backgroundColor = "#fff";
-        voiceBtn.innerHTML = '<i class="fas fa-microphone" style="color: #2e7d32;"></i>';
-        userInput.placeholder = "请输入问题，或点击左侧麦克风说话...";
+        voiceBtn.classList.remove('recording');
+        voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+        userInput.placeholder = "请输入问题...";
     }
 
     voiceBtn.addEventListener('click', () => {
-        if (!recognition) return alert("您的浏览器不支持语音识别。");
+        if (!recognition) return;
         isRecording ? recognition.stop() : recognition.start();
     });
 
     // ==========================================
-    // 4. 核心交互：聊天气泡与卡片渲染
+    // 4. 核心交互：消息渲染逻辑
     // ==========================================
-    function getCurrentTime() {
-        const now = new Date();
-        return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    }
-
-    function scrollToBottom() {
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    function generateCardHTML(cardData) {
-        if (!cardData || cardData.length === 0) return '';
-        let cardsHtml = '<div class="kg-cards-container">';
-        cardData.forEach(item => {
-            cardsHtml += `
-                <div class="kg-card">
-                    <div class="kg-card-header">
-                        <i class="fas fa-seedling"></i> <strong>${item.品种}</strong>
-                    </div>
-                    <div class="kg-card-body">
-                        <p><span><i class="fas fa-balance-scale"></i> 亩产：</span>${item.亩产} 公斤</p>
-                        <p><span><i class="fas fa-certificate"></i> 审定：</span>${item.审定号}</p>
-                        ${item.抗病害.length > 0 ? `<p><span><i class="fas fa-shield-virus"></i> 抗病：</span>${item.抗病害.join('、')}</p>` : ''}
-                        ${item.耐受特性.length > 0 ? `<p><span><i class="fas fa-sun"></i> 抗逆：</span>${item.耐受特性.join('、')}</p>` : ''}
-                    </div>
-                </div>
-            `;
-        });
-        cardsHtml += '</div>';
-        return cardsHtml;
-    }
-
     function appendMessage(type, text, cardData = null) {
         const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${type}-message`;
-        let avatarHTML = type === 'bot' ? `<div class="avatar"><i class="fas fa-user-graduate"></i></div>` : '';
-        let extraCardHTML = (type === 'bot' && cardData) ? generateCardHTML(cardData) : '';
+        messageDiv.className = `message ${type}-message animate__animated animate__fadeInUp`;
+
+        let avatarHTML = type === 'bot' ? `<div class="avatar"><i class="fas fa-robot"></i></div>` : '';
+        let cardHTML = (type === 'bot' && cardData && cardData.length > 0) ? generateCardHTML(cardData) : '';
+
         const formattedText = text.replace(/\n/g, '<br>');
 
         messageDiv.innerHTML = `
             ${avatarHTML}
             <div class="content">
-                <p>${formattedText}</p>
-                ${extraCardHTML}
-                <span class="time">${getCurrentTime()}</span>
+                <div class="text-bubble">${formattedText}</div>
+                ${cardHTML}
+                <span class="time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
             </div>
         `;
         chatWindow.appendChild(messageDiv);
-        scrollToBottom();
+        chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
+    function generateCardHTML(data) {
+        return `
+            <div class="kg-cards-scroll">
+                ${data.map(item => `
+                    <div class="kg-card">
+                        <div class="kg-card-badge">推荐品种</div>
+                        <h4><i class="fas fa-seedling"></i> ${item.variety || item.品种}</h4>
+                        <div class="kg-info">
+                            <p><strong><i class="fas fa-chart-line"></i> 预估亩产:</strong> ${item.yield || item.亩产}kg</p>
+                            <p><strong><i class="fas fa-id-card"></i> 审定编号:</strong> ${item.approval || item.审定号 || '暂无'}</p>
+                            <p><strong><i class="fas fa-shield-alt"></i> 抗性特性:</strong> ${(item.resistances || item.抗性 || []).join('、') || '常规'}</p>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // ==========================================
+    // 5. 消息发送逻辑
+    // ==========================================
     function sendMessage(isVoice = false) {
         const text = userInput.value.trim();
-        if (text === '') return;
+        if (!text) return;
 
         appendMessage('user', text);
         userInput.value = '';
-        userInput.style.height = 'auto';
+        userInput.style.height = '45px';
 
-        const loadingId = 'loading-' + Date.now();
         const loadingDiv = document.createElement('div');
-        loadingDiv.className = `message bot-message`;
-        loadingDiv.id = loadingId;
+        loadingDiv.className = 'message bot-message loading-msg';
         loadingDiv.innerHTML = `
-            <div class="avatar"><i class="fas fa-user-graduate"></i></div>
-            <div class="content"><p><i class="fas fa-spinner fa-spin"></i> 专家正在查阅图谱分析中...</p></div>
+            <div class="avatar"><i class="fas fa-robot"></i></div>
+            <div class="content"><div class="text-bubble"><i class="fas fa-ellipsis-h fa-beat"></i> 专家正在为您匹配优良品种...</div></div>
         `;
         chatWindow.appendChild(loadingDiv);
-        scrollToBottom();
+        chatWindow.scrollTop = chatWindow.scrollHeight;
 
-        //
-        // 这里的后端接口会根据 Session 自动关联 user_id
         fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -189,22 +182,124 @@ document.addEventListener('DOMContentLoaded', () => {
                 location: currentUserLocation,
                 is_voice: isVoice
             }),
+            credentials: 'include'
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
-            document.getElementById(loadingId).remove();
+            loadingDiv.remove();
             if (data.code === 200) {
                 appendMessage('bot', data.reply, data.card_data);
             } else {
-                appendMessage('bot', `抱歉，出现了一些问题：${data.msg}`);
+                appendMessage('bot', `服务繁忙：${data.msg}`);
             }
         })
-        .catch(error => {
-            if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
-            appendMessage('bot', '糟了，与服务器的连接断开了。');
+        .catch(() => {
+            loadingDiv.remove();
+            appendMessage('bot', '网络连接似乎断开了，请检查网络设置。');
         });
     }
 
+    // ==========================================
+    // 6. 历史记录交互逻辑
+    // ==========================================
+    const toggleHistory = (show) => {
+        if (show) {
+            historySidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
+            loadHistory();
+        } else {
+            historySidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        }
+    };
+
+    if (openHistoryBtn) openHistoryBtn.addEventListener('click', () => toggleHistory(true));
+    if (closeHistoryBtn) closeHistoryBtn.addEventListener('click', () => toggleHistory(false));
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', () => toggleHistory(false));
+
+    function loadHistory() {
+        historyList.innerHTML = '<div style="text-align: center; color: #999; margin-top: 50px;"><i class="fas fa-spinner fa-spin"></i> 加载中...</div>';
+
+        fetch('/api/chat/history', { credentials: 'include' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.code === 200) {
+                    if (data.data.length === 0) {
+                        historyList.innerHTML = '<div style="text-align: center; color: #999; margin-top: 50px;">暂无历史咨询记录</div>';
+                        return;
+                    }
+
+                    historyList.innerHTML = '';
+                    data.data.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'history-item';
+                        div.innerHTML = `
+                            <div class="h-query"><i class="fas fa-question-circle"></i> ${item.query}</div>
+                            <div class="h-reply">${item.reply}</div>
+                        `;
+                        div.onclick = () => {
+                            appendMessage('user', item.query);
+                            appendMessage('bot', `(历史回溯) ${item.reply}`);
+                            toggleHistory(false);
+                        };
+                        historyList.appendChild(div);
+                    });
+                } else {
+                    historyList.innerHTML = `<div style="text-align: center; color: #d32f2f; margin-top: 50px;">加载失败：${data.msg}</div>`;
+                }
+            })
+            .catch(() => {
+                historyList.innerHTML = '<div style="text-align: center; color: #d32f2f; margin-top: 50px;">网络异常</div>';
+            });
+    }
+
+    // ==========================================
+    // 7. 【新增功能】导出用户咨询报告
+    // ==========================================
+    window.exportUserHistory = function() {
+        const btn = event.currentTarget;
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在生成...';
+
+        fetch('/api/chat/history', { credentials: 'include' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.code === 200 && data.data.length > 0) {
+                    let reportContent = `------------------------------------------\n`;
+                    reportContent += `   农产品良种智能客服 - 咨询报告\n`;
+                    reportContent += `   生成时间：${new Date().toLocaleString()}\n`;
+                    reportContent += `------------------------------------------\n\n`;
+
+                    data.data.reverse().forEach((item, index) => {
+                        reportContent += `【问题 ${index + 1}】: ${item.query}\n`;
+                        reportContent += `【专家建议】: ${item.reply.replace(/<br>/g, '\n')}\n`;
+                        reportContent += `【咨询地区】: ${item.location || '自动定位'}\n`;
+                        reportContent += `------------------------------------------\n`;
+                    });
+
+                    // 纯前端导出 Blob
+                    const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `农业专家咨询报告_${new Date().toLocaleDateString().replace(/\//g, '-')}.txt`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } else {
+                    alert("暂无咨询记录可供导出");
+                }
+            })
+            .catch(err => alert("导出报告失败，请稍后再试"))
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            });
+    };
+
+    // 事件绑定
     sendBtn.addEventListener('click', () => sendMessage(false));
     userInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -215,7 +310,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     userInput.addEventListener('input', function() {
         this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-        this.style.overflowY = this.scrollHeight > 100 ? "scroll" : "hidden";
+        let newHeight = this.scrollHeight;
+        this.style.height = (newHeight > 150 ? 150 : newHeight) + 'px';
     });
+
+    initApp();
 });

@@ -10,6 +10,7 @@
             --primary-green: #2e7d32;
             --light-green: #a5d6a7;
             --earth-yellow: #fff8e1;
+            --error-red: #d32f2f;
         }
 
         * {
@@ -25,6 +26,7 @@
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            /* 保持你原本的背景图，如果图片失效建议替换本地路径 */
             background-image: url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
@@ -85,7 +87,7 @@
         }
 
         .btn-box {
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
         .main-btn {
@@ -110,6 +112,7 @@
         .main-btn:disabled {
             background-color: #ccc;
             cursor: not-allowed;
+            transform: none;
         }
 
         .toggle-box {
@@ -126,7 +129,7 @@
         }
 
         #errorMsg {
-            color: #d32f2f;
+            color: var(--error-red);
             text-align: center;
             font-size: 0.9rem;
             margin-top: 10px;
@@ -142,63 +145,72 @@
         <h2 id="titleText">良种智能客服登录</h2>
     </div>
 
-    <div class="input-group">
-        <i class="fas fa-user"></i>
-        <input type="text" id="username" placeholder="请输入用户名" required>
-    </div>
+    <form id="authForm">
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" placeholder="请输入用户名" required>
+        </div>
 
-    <div class="input-group">
-        <i class="fas fa-lock"></i>
-        <input type="password" id="password" placeholder="请输入密码" required>
-    </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="请输入密码" required>
+        </div>
 
-    <p id="errorMsg"></p>
+        <p id="errorMsg"></p>
 
-    <div class="btn-box">
-        <button class="main-btn" id="actionBtn">立 即 登 录</button>
-    </div>
+        <div class="btn-box">
+            <button type="submit" class="main-btn" id="actionBtn">立 即 登 录</button>
+        </div>
+    </form>
 
     <div class="toggle-box" id="toggleArea">
-        还没有账号？ <span id="toggleLink">点击注册</span>
+        <span>还没有账号？ </span><span id="toggleLink">点击注册</span>
     </div>
 </div>
 
 <script>
+    const authForm = document.getElementById('authForm');
     const titleText = document.getElementById('titleText');
     const actionBtn = document.getElementById('actionBtn');
     const toggleLink = document.getElementById('toggleLink');
+    const toggleAreaPrefix = document.querySelector('#toggleArea span:first-child');
     const errorMsg = document.getElementById('errorMsg');
 
     let isLoginMode = true;
 
-    // 切换登录/注册模式
+    // 切换登录/注册模式逻辑
     toggleLink.addEventListener('click', () => {
         isLoginMode = !isLoginMode;
         if (isLoginMode) {
             titleText.innerText = '良种智能客服登录';
             actionBtn.innerText = '立 即 登 录';
             toggleLink.innerText = '点击注册';
-            document.getElementById('toggleArea').firstChild.textContent = '还没有账号？ ';
+            toggleAreaPrefix.innerText = '还没有账号？ ';
         } else {
             titleText.innerText = '新用户注册';
             actionBtn.innerText = '立 即 注 册';
             toggleLink.innerText = '返回登录';
-            document.getElementById('toggleArea').firstChild.textContent = '已有账号？ ';
+            toggleAreaPrefix.innerText = '已有账号？ ';
         }
         errorMsg.innerText = '';
+        errorMsg.style.color = 'var(--error-red)';
     });
 
-    // 提交逻辑
-    actionBtn.addEventListener('click', () => {
+    // 表单提交处理
+    authForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // 阻止表单默认跳转
+
         const username = document.getElementById('username').value.trim();
         const password = document.getElementById('password').value.trim();
 
         if (!username || !password) {
-            errorMsg.innerText = '请填写完整信息';
+            showError('请填写完整信息');
             return;
         }
 
+        // 按钮状态更新
         actionBtn.disabled = true;
+        const originalBtnText = actionBtn.innerText;
         actionBtn.innerText = isLoginMode ? '正在登录...' : '正在注册...';
         errorMsg.innerText = '';
 
@@ -208,7 +220,7 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
-            // 【关键修复】：强制包含凭据（Cookies）
+            // 【核心关键】：必须携带凭据以允许后端写入 Session Cookie
             credentials: 'include'
         })
         .then(res => res.json())
@@ -216,31 +228,40 @@
             if (data.code === 200) {
                 if (isLoginMode) {
                     errorMsg.style.color = 'var(--primary-green)';
-                    errorMsg.innerText = '登录成功，正在跳转...';
-                    // 稍微延迟一下确保 Cookie 写入完毕
+                    errorMsg.innerText = '登录成功，正在进入系统...';
+
+                    // 【重要】：稍微延迟跳转，确保浏览器有足够时间处理 Set-Cookie 响应头
                     setTimeout(() => {
+                        // 根据后端返回的 role 跳转到对应页面
                         window.location.href = data.role === 'admin' ? '/admin' : '/';
-                    }, 500);
+                    }, 600);
                 } else {
-                    alert('注册成功，请登录！');
-                    toggleLink.click();
+                    alert('注册成功，请使用新账号登录！');
+                    toggleLink.click(); // 自动切回登录模式
                     actionBtn.disabled = false;
+                    actionBtn.innerText = '立 即 登 录';
                 }
             } else {
-                errorMsg.style.color = '#d32f2f';
-                errorMsg.innerText = data.msg;
-                actionBtn.disabled = false;
-                actionBtn.innerText = isLoginMode ? '立 即 登 录' : '立 即 注 册';
+                showError(data.msg || '操作失败');
+                resetButton(originalBtnText);
             }
         })
         .catch(err => {
-            console.error(err);
-            errorMsg.style.color = '#d32f2f';
-            errorMsg.innerText = '网络异常，请确认后端服务运行中';
-            actionBtn.disabled = false;
-            actionBtn.innerText = isLoginMode ? '立 即 登 录' : '立 即 注 册';
+            console.error('Auth Error:', err);
+            showError('连接服务器失败，请检查网络或后端服务');
+            resetButton(originalBtnText);
         });
     });
+
+    function showError(msg) {
+        errorMsg.style.color = 'var(--error-red)';
+        errorMsg.innerText = msg;
+    }
+
+    function resetButton(text) {
+        actionBtn.disabled = false;
+        actionBtn.innerText = text;
+    }
 </script>
 
 </body>

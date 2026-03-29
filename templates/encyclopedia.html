@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>良种百科大厅 - 丰收助手</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #a5d6a7;
+            --bg-color: #f4f7f6;
+            --text-dark: #333;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); }
+
+        /* 顶部导航 */
+        .navbar {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar h2 { font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--light-green); }
+
+        /* 主体布局 */
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        /* 左侧筛选侧边栏 */
+        .filter-sidebar {
+            width: 280px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 90px;
+            flex-shrink: 0;
+        }
+        .filter-sidebar h3 { color: var(--primary-green); margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+
+        .filter-group { margin-bottom: 20px; }
+        .filter-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #555; font-size: 0.95rem; }
+        .filter-group input, .filter-group select {
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; outline: none; transition: 0.3s;
+        }
+        .filter-group input:focus, .filter-group select:focus { border-color: var(--primary-green); }
+
+        .reset-btn {
+            width: 100%; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 6px;
+            cursor: pointer; font-weight: bold; color: #666; transition: 0.3s; margin-top: 10px;
+        }
+        .reset-btn:hover { background: #f9f9f9; color: var(--text-dark); }
+
+        /* 右侧卡片瀑布流 */
+        .content-area { flex: 1; }
+        .top-bar { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; color: #666; }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* 种子卡片 */
+        .seed-card {
+            background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        .seed-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+
+        .crop-badge {
+            position: absolute; top: 0; right: 0; background: var(--primary-green); color: white;
+            padding: 5px 15px; font-size: 0.8rem; font-weight: bold; border-bottom-left-radius: 12px;
+        }
+
+        .seed-title { font-size: 1.3rem; color: #2e7d32; margin-bottom: 15px; font-weight: bold; padding-right: 60px; }
+
+        .seed-info p { margin-bottom: 8px; font-size: 0.95rem; color: #555; display: flex; align-items: flex-start; gap: 8px; }
+        .seed-info i { margin-top: 4px; color: #81c784; width: 16px; text-align: center; }
+        .seed-info strong { color: #333; min-width: 70px; }
+
+        .tag-container { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+        .tag { background: #f1f8e9; color: #388e3c; padding: 4px 10px; border-radius: 15px; font-size: 0.8rem; border: 1px solid #c8e6c9; }
+
+        .yield-highlight { font-size: 1.2rem; color: #f57c00; font-weight: bold; }
+
+        /* 加载与空状态 */
+        .loading, .empty-state { text-align: center; padding: 50px; color: #999; font-size: 1.1rem; grid-column: 1 / -1; }
+        .loading i { font-size: 2rem; margin-bottom: 15px; color: var(--primary-green); }
+
+        @media (max-width: 900px) {
+            .container { flex-direction: column; }
+            .filter-sidebar { width: 100%; position: static; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <h2><i class="fas fa-book-open"></i> 农产品良种百科大厅</h2>
+        <div class="nav-links">
+            <a href="/"><i class="fas fa-comments"></i> 智能问答</a>
+            <a href="/profile"><i class="fas fa-tractor"></i> 我的农场</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> 退出</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="filter-sidebar">
+            <h3><i class="fas fa-filter"></i> 精准检索</h3>
+
+            <div class="filter-group">
+                <label>关键词搜索</label>
+                <input type="text" id="searchInput" placeholder="搜索品种名、抗性...">
+            </div>
+
+            <div class="filter-group">
+                <label>作物分类</label>
+                <select id="cropFilter">
+                    <option value="all">全部作物</option>
+                    </select>
+            </div>
+
+            <div class="filter-group">
+                <label>适宜种植地区</label>
+                <select id="locationFilter">
+                    <option value="all">全国通用 / 全部地区</option>
+                    </select>
+            </div>
+
+            <button class="reset-btn" onclick="resetFilters()"><i class="fas fa-sync-alt"></i> 重置检索条件</button>
+        </div>
+
+        <div class="content-area">
+            <div class="top-bar">
+                <span>图谱数据实时同步自 Neo4j 数据库</span>
+                <span id="resultCount">共检索到 0 个良种</span>
+            </div>
+
+            <div class="card-grid" id="cardGrid">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>正在从知识图谱加载海量良种数据...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allData = []; // 存储全量图谱数据
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadEncyclopediaData();
+
+            // 绑定筛选事件
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('cropFilter').addEventListener('change', applyFilters);
+            document.getElementById('locationFilter').addEventListener('change', applyFilters);
+        });
+
+        // 获取全库数据
+        function loadEncyclopediaData() {
+            fetch('/api/encyclopedia/data')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.code === 200) {
+                        allData = data.data;
+                        initFilters();
+                        applyFilters(); // 初始渲染全部
+                    } else {
+                        document.getElementById('cardGrid').innerHTML = `<div class="empty-state">数据加载失败：${data.msg}</div>`;
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('cardGrid').innerHTML = '<div class="empty-state">网络异常，无法连接到知识图谱</div>';
+                });
+        }
+
+        // 初始化下拉筛选框的选项
+        function initFilters() {
+            const crops = new Set();
+            const locations = new Set();
+
+            allData.forEach(item => {
+                if (item.crop) crops.add(item.crop);
+                if (item.locations && Array.isArray(item.locations)) {
+                    item.locations.forEach(loc => locations.add(loc));
+                }
+            });
+
+            const cropSelect = document.getElementById('cropFilter');
+            crops.forEach(c => {
+                cropSelect.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+
+            const locSelect = document.getElementById('locationFilter');
+            locations.forEach(l => {
+                locSelect.innerHTML += `<option value="${l}">${l}</option>`;
+            });
+        }
+
+        // 应用筛选条件并渲染
+        function applyFilters() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            const crop = document.getElementById('cropFilter').value;
+            const location = document.getElementById('locationFilter').value;
+
+            const filteredData = allData.filter(item => {
+                // 1. 关键词过滤（匹配品种名或抗性）
+                const matchKeyword = !keyword ||
+                    (item.variety && item.variety.toLowerCase().includes(keyword)) ||
+                    (item.resistances && item.resistances.join(',').toLowerCase().includes(keyword));
+
+                // 2. 作物分类过滤
+                const matchCrop = crop === 'all' || item.crop === crop;
+
+                // 3. 地区过滤
+                const matchLocation = location === 'all' ||
+                    (item.locations && item.locations.includes(location));
+
+                return matchKeyword && matchCrop && matchLocation;
+            });
+
+            renderCards(filteredData);
+            document.getElementById('resultCount').innerText = `共检索到 ${filteredData.length} 个良种`;
+        }
+
+        // 重置检索
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('cropFilter').value = 'all';
+            document.getElementById('locationFilter').value = 'all';
+            applyFilters();
+        }
+
+        // 渲染卡片 HTML
+        function renderCards(data) {
+            const grid = document.getElementById('cardGrid');
+
+            if (data.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><i class="fas fa-box-open" style="font-size:3rem;color:#ddd;margin-bottom:15px;display:block;"></i>没有找到符合条件的良种，请尝试精简检索条件。</div>';
+                return;
+            }
+
+            let html = '';
+            data.forEach(item => {
+                // 处理抗性标签
+                let resTags = '';
+                if (item.resistances && item.resistances.length > 0) {
+                    resTags = item.resistances.map(r => `<span class="tag"><i class="fas fa-shield-virus"></i> ${r}</span>`).join('');
+                } else {
+                    resTags = '<span class="tag" style="color:#999;border-color:#eee;background:#f9f9f9;">常规抗性</span>';
+                }
+
+                // 处理适宜地区
+                let locText = (item.locations && item.locations.length > 0) ? item.locations.join('、') : '广泛适宜';
+
+                html += `
+                    <div class="seed-card">
+                        <div class="crop-badge">${item.crop || '未知作物'}</div>
+                        <div class="seed-title">${item.variety || '未命名品种'}</div>
+
+                        <div class="seed-info">
+                            <p><i class="fas fa-chart-line"></i> <strong>预估亩产:</strong> <span class="yield-highlight">${item.yield || '--'} kg</span></p>
+                            <p><i class="fas fa-id-card"></i> <strong>审定编号:</strong> ${item.approval || '暂无数据'}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> <strong>适宜地区:</strong> ${locText}</p>
+                        </div>
+
+                        <div style="margin-top: 10px; border-top: 1px dashed #eee; padding-top: 10px;">
+                            <strong style="font-size: 0.85rem; color: #777;">突出特性：</strong>
+                            <div class="tag-container">
+                                ${resTags}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

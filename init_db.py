@@ -21,7 +21,7 @@ def init_database():
         connection = pymysql.connect(**DB_CONFIG)
 
         with connection.cursor() as cursor:
-            # 2. 彻底清理旧库 (解决 Unknown column 报错的关键)
+            # 2. 彻底清理旧库 (解决增加新表后结构冲突的关键)
             print(f"⚠️ 正在清理旧的数据库 '{DB_NAME}'...")
             cursor.execute(f"DROP DATABASE IF EXISTS {DB_NAME};")
 
@@ -35,13 +35,17 @@ def init_database():
         print("--------------------------------------------------")
         print("💡 下一步操作：")
         print("   1. 现在你可以直接运行 'python app.py'。")
-        print("   2. 系统会自动在空库中创建最新的表结构（含密码和角色字段）。")
-        print("   3. 系统会自动为你生成管理员账号：admin / 123456")
+        print("   2. Flask系统会自动在空库中创建最新的表结构，包括：")
+        print("      - users (用户与权限)")
+        print("      - chat_logs (问答与历史日志)")
+        print("      - farm_info (【新增】个人土地农场信息)")
+        print("      - ledgers (【新增】农事收支账本)")
+        print("   3. 系统启动时会自动为你生成管理员账号：admin / 123456")
         print("--------------------------------------------------")
 
     except Exception as e:
         print(f"❌ 初始化失败: {e}")
-        print("请检查：1. MySQL是否启动  2. 账号密码是否正确  3. 是否安装了 cryptography 包")
+        print("请检查：1. MySQL是否启动  2. 账号密码是否正确  3. 端口是否被占用")
     finally:
         if connection:
             connection.close()
@@ -49,7 +53,10 @@ def init_database():
 
 if __name__ == '__main__':
     # 给用户一个反悔的机会，防止误删
-    confirm = input("⚠️ 该操作将清空所有聊天记录和用户信息，确认重置吗？(y/n): ")
+    print("==================================================")
+    print(" 🚨 危险操作警告 🚨 ")
+    print("==================================================")
+    confirm = input("⚠️ 该操作将清空所有聊天记录、【农场信息】和【账本数据】，确认重置吗？(y/n): ")
     if confirm.lower() == 'y':
         init_database()
     else:
