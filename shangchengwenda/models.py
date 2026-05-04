@@ -10,6 +10,8 @@ class User(db.Model):
     username = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(20), default='user', nullable=False)
+    merchant_status = db.Column(db.String(20), default='none', nullable=False)  # none/pending/approved/rejected
+    shop_name = db.Column(db.String(128), default='')
     created_at = db.Column(db.DateTime, default=datetime.now)
 
     def set_password(self, password):
@@ -27,6 +29,8 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, default=0)
     desc = db.Column(db.Text, default='')
+    merchant_id = db.Column(db.Integer, db.ForeignKey('sc_users.id'), nullable=False)
+    status = db.Column(db.String(20), default='on_sale', nullable=False)  # on_sale/off_sale
     created_at = db.Column(db.DateTime, default=datetime.now)
 
 class Order(db.Model):
@@ -39,6 +43,7 @@ class Order(db.Model):
     address = db.Column(db.String(255), default='')
     logistics_company = db.Column(db.String(64), default='')
     tracking_no = db.Column(db.String(64), default='')
+    received_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=datetime.now)
 
 class ChatLog(db.Model):
