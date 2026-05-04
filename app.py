@@ -106,8 +106,10 @@ def index():
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """GraphRAG 问答引擎接口"""
+    if 'user_id' not in session:
+        return jsonify({"code": 401, "msg": "未登录"})
     try:
-        data = request.json
+        data = request.get_json(silent=True) or {}
         user_message = data.get('message', '').strip()
         user_location = data.get('location', None)
         is_voice = data.get('is_voice', False)
@@ -134,15 +136,28 @@ def chat():
         if intent and intent.get('crop'):
             kg_data = graph_rag.query_neo4j(intent, auto_location=user_location)
 
-        # ================= 3. 调用大模型生成最终回复 =================
+        # ================= 3. 汇总账本财务信息 =================
+        ledger_rows = db.session.query(
+            Ledger.type,
+            func.coalesce(func.sum(Ledger.amount), 0)
+        ).filter_by(user_id=user_id).group_by(Ledger.type).all()
+        ledger_stats = {"total_income": 0.0, "total_expense": 0.0}
+        for row_type, row_sum in ledger_rows:
+            if row_type == 'income':
+                ledger_stats["total_income"] = float(row_sum or 0)
+            elif row_type == 'expense':
+                ledger_stats["total_expense"] = float(row_sum or 0)
+
+        # ================= 4. 调用大模型生成最终回复 =================
         final_reply = graph_rag.generate_final_answer(
             user_message,
             kg_data,
             auto_location=user_location,
-            farm_info=farm_info_dict  # 把农场信息传给大模型
+            farm_info=farm_info_dict,  # 把农场信息传给大模型
+            ledger_stats=ledger_stats
         )
 
-        # ================= 4. 记录日志到数据库 =================
+        # ================= 5. 记录日志到数据库 =================
         new_log = ChatLog(
             user_id=session.get('user_id'),
             user_query=user_message,
@@ -176,7 +191,13 @@ def get_chat_history():
     try:
         logs = ChatLog.query.filter_by(user_id=user_id).order_by(ChatLog.id.desc()).limit(50).all()
         history_list = [
-            {"id": log.id, "query": log.user_query, "reply": log.bot_reply, "location": log.location, "time": log.id}
+            {
+                "id": log.id,
+                "query": log.user_query,
+                "reply": log.bot_reply,
+                "location": log.location,
+                "time": log.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            }
             for log in logs]
         return jsonify({"code": 200, "data": history_list})
     except Exception as e:
@@ -210,12 +231,18 @@ def farm_info_api():
         }})
 
     if request.method == 'POST':
-        data = request.json
+        data = request.get_json(silent=True) or {}
         if not farm:
             farm = FarmInfo(user_id=user_id)
             db.session.add(farm)
+        try:
+            area = float(data.get('area', 0) or 0)
+        except (TypeError, ValueError):
+            return jsonify({"code": 400, "msg": "种植面积格式不正确"})
+        if area < 0:
+            return jsonify({"code": 400, "msg": "种植面积不能为负数"})
 
-        farm.area = float(data.get('area', 0))
+        farm.area = area
         farm.soil_type = data.get('soil_type', '')
         farm.main_crop = data.get('main_crop', '')
         farm.location = data.get('location', '')
@@ -237,13 +264,21 @@ def ledger_api():
         return jsonify({"code": 200, "data": data})
 
     if request.method == 'POST':
-        data = request.json
+        data = request.get_json(silent=True) or {}
+        if not data.get('date') or not data.get('type') or not data.get('category'):
+            return jsonify({"code": 400, "msg": "日期、收支类型、类别不能为空"})
+        try:
+            amount = float(data.get('amount', 0))
+        except (TypeError, ValueError):
+            return jsonify({"code": 400, "msg": "金额格式不正确"})
+        if amount <= 0:
+            return jsonify({"code": 400, "msg": "金额必须大于0"})
         new_record = Ledger(
             user_id=user_id,
             record_date=data.get('date'),
             type=data.get('type'),
             category=data.get('category'),
-            amount=float(data.get('amount', 0)),
+            amount=amount,
             notes=data.get('notes', '')
         )
         db.session.add(new_record)

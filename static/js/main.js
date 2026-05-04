@@ -115,6 +115,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 4. 核心交互：消息渲染逻辑
     // ==========================================
+    const escapeHTML = (str = '') => String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
     function appendMessage(type, text, cardData = null) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${type}-message animate__animated animate__fadeInUp`;
@@ -122,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let avatarHTML = type === 'bot' ? `<div class="avatar"><i class="fas fa-robot"></i></div>` : '';
         let cardHTML = (type === 'bot' && cardData && cardData.length > 0) ? generateCardHTML(cardData) : '';
 
-        const formattedText = text.replace(/\n/g, '<br>');
+        const formattedText = escapeHTML(text).replace(/\n/g, '<br>');
 
         messageDiv.innerHTML = `
             ${avatarHTML}
@@ -142,11 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${data.map(item => `
                     <div class="kg-card">
                         <div class="kg-card-badge">推荐品种</div>
-                        <h4><i class="fas fa-seedling"></i> ${item.variety || item.品种}</h4>
+                        <h4><i class="fas fa-seedling"></i> ${escapeHTML(item.variety || item.品种 || '未知品种')}</h4>
                         <div class="kg-info">
-                            <p><strong><i class="fas fa-chart-line"></i> 预估亩产:</strong> ${item.yield || item.亩产}kg</p>
-                            <p><strong><i class="fas fa-id-card"></i> 审定编号:</strong> ${item.approval || item.审定号 || '暂无'}</p>
-                            <p><strong><i class="fas fa-shield-alt"></i> 抗性特性:</strong> ${(item.resistances || item.抗性 || []).join('、') || '常规'}</p>
+                            <p><strong><i class="fas fa-chart-line"></i> 预估亩产:</strong> ${escapeHTML(item.yield || item.亩产 || '未知')}kg</p>
+                            <p><strong><i class="fas fa-id-card"></i> 审定编号:</strong> ${escapeHTML(item.approval || item.审定号 || '暂无')}</p>
+                            <p><strong><i class="fas fa-shield-alt"></i> 抗性特性:</strong> ${escapeHTML((item.resistances || item.抗性 || []).join('、') || '常规')}</p>
                         </div>
                     </div>
                 `).join('')}
@@ -256,8 +263,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 7. 【新增功能】导出用户咨询报告
     // ==========================================
-    window.exportUserHistory = function() {
-        const btn = event.currentTarget;
+    window.exportUserHistory = function(btnEl) {
+        const btn = btnEl || document.querySelector('.export-btn');
         const originalText = btn.innerHTML;
         btn.disabled = true;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在生成...';

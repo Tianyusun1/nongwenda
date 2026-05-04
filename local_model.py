@@ -1,5 +1,6 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+import os
 
 
 class LocalQwen:
@@ -43,6 +44,6 @@ class LocalQwen:
 
 
 # 测试单例（防止多次加载撑爆显存）
-# 注意：这里的路径改为你 E:\nong_wenda\qwen 的实际完整路径
-MODEL_PATH = r"E:\nong_wenda\qwen"
+# 支持通过环境变量覆盖，便于 Linux/Windows 多环境部署
+MODEL_PATH = os.getenv("QWEN_MODEL_PATH", r"E:\nong_wenda\qwen")
 qwen_brain = LocalQwen(MODEL_PATH)
