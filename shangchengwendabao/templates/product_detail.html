@@ -1,0 +1,10 @@
+<!doctype html><html lang='zh-CN'><head><meta charset='utf-8'><title>商品详情</title></head><body>
+<h2>商品详情</h2><div id='detail'>加载中...</div><a href='/mall'>返回商城</a>
+<script>
+const id = {{ product_id }};
+fetch(`/api/products/${id}`, {credentials:'include'}).then(r=>r.json()).then(d=>{
+ if(d.code!==200){document.getElementById('detail').innerText=d.msg; return;}
+ const p=d.data; document.getElementById('detail').innerHTML=`<h3>${p.name}</h3><p>SKU:${p.sku}</p><p>价格:¥${p.price}</p><p>库存:${p.stock}</p><p>${p.desc||''}</p>`;
+});
+</script>
+</body></html>

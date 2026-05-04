@@ -1,0 +1,15 @@
+<!doctype html><html lang='zh-CN'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>商城客服登录</title></head><body>
+<h2>商城客服系统登录</h2>
+<input id='u' placeholder='用户名'><input id='p' type='password' placeholder='密码'>
+<button onclick='auth(true)'>登录</button><button onclick='auth(false)'>注册</button><p id='msg'></p>
+<script>
+async function auth(login){
+ const username=document.getElementById('u').value.trim();
+ const password=document.getElementById('p').value.trim();
+ const res=await fetch(login?'/api/login':'/api/register',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({username,password})});
+ const data=await res.json();
+ document.getElementById('msg').innerText=data.msg||'';
+ if(data.code===200&&login) location.href='/';
+}
+</script>
+</body></html>
